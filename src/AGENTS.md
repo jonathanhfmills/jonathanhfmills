@@ -17,6 +17,9 @@ Container for all project submodules. Each subdirectory is a separate git reposi
 | `website-wp-theme-template/` | WordPress theme template |
 | `aw-watcher-window-wayland/` | ActivityWatch window watcher for Wayland |
 | `jonathanhfmills/` | GitHub profile README repo |
+| `royalclaw/` | royalclaw project |
+| `dotfiles-jon/` | Personal dotfiles (non-WSL variant) |
+| `aw-android-adb/` | ActivityWatch Android ADB watcher |
 
 ## For AI Agents
 

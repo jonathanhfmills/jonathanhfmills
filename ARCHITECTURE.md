@@ -44,6 +44,10 @@ orchestrator (main)
 | `src/aw-watcher-window-wayland/` | github.com/jonathanhfmills/aw-watcher-window-wayland | `master` |
 | `src/jonathanhfmills/` | github.com/jonathanhfmills/jonathanhfmills | `main` |
 
+| `src/royalclaw/` | github.com/jonathanhfmills/royalclaw | `master` |
+| `src/dotfiles-jon/` | github.com/jonathanhfmills/dotfiles-jon | `master` |
+| `src/aw-android-adb/` | github.com/jonathanhfmills/aw-android-adb | `main` |
+
 Note: `dotfiles-wsl` contains `bicameral-mind` as a sub-submodule (see ADR 0005). `dotfiles-template` not yet registered — empty repo, pending seed from `dotfiles-wsl`.
 
 ## Commit flow

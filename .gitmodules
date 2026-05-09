@@ -25,3 +25,12 @@
 [submodule "src/jonathanhfmills"]
 	path = src/jonathanhfmills
 	url = https://github.com/jonathanhfmills/jonathanhfmills.git
+[submodule "src/royalclaw"]
+	path = src/royalclaw
+	url = https://github.com/jonathanhfmills/royalclaw.git
+[submodule "src/dotfiles-jon"]
+	path = src/dotfiles-jon
+	url = https://github.com/jonathanhfmills/dotfiles-jon.git
+[submodule "src/aw-android-adb"]
+	path = src/aw-android-adb
+	url = https://github.com/jonathanhfmills/aw-android-adb.git
