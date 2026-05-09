@@ -40,6 +40,11 @@ Forward-looking task list. Move items to `docs/tasks/YYYY-MM-DD.md` when work be
 - [ ] [HITLFE] feat: Write .gemini/settings.json telemetry block — useCollector:true, otlp grpc, logPrompts:true, traces:true
 - [ ] [HIC] chore: Fill in otlpEndpoint for org collector
 
+### [dotfiles-wsl#15] Add SOC2-compliant Qwen Code OTEL config to .qwen stow package
+
+- [ ] [HITLFE] feat: Write .qwen/settings.json telemetry block — otlp grpc, logPrompts:true, target:local
+- [ ] [HIC] chore: Fill in otlpEndpoint for org collector
+
 | Tag | Stands For | Meaning |
 |-----|-----------|---------|
 | `[HOOTL]` | Human-Out-of-the-Loop | AI executes autonomously; human audits after-the-fact if needed |
