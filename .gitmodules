@@ -1,0 +1,27 @@
+[submodule "src/dotfiles-wsl"]
+	path = src/dotfiles-wsl
+	url = https://github.com/jonathanhfmills/dotfiles-wsl.git
+[submodule "src/git-orchestrator"]
+	path = src/git-orchestrator
+	url = https://github.com/jonathanhfmills/git-orchestrator.git
+[submodule "src/skills"]
+	path = src/skills
+	url = https://github.com/jonathanhfmills/skills.git
+[submodule "src/bicameral-mind-agents"]
+	path = src/bicameral-mind-agents
+	url = https://github.com/jonathanhfmills/bicameral-mind-agents.git
+[submodule "src/fahrenheit-non-zero-floating-point-scale"]
+	path = src/fahrenheit-non-zero-floating-point-scale
+	url = https://github.com/jonathanhfmills/fahrenheit-non-zero-floating-point-scale.git
+[submodule "src/website-wp-bedrock-template"]
+	path = src/website-wp-bedrock-template
+	url = https://github.com/jonathanhfmills/website-wp-bedrock-template.git
+[submodule "src/website-wp-theme-template"]
+	path = src/website-wp-theme-template
+	url = https://github.com/jonathanhfmills/website-wp-theme-template.git
+[submodule "src/aw-watcher-window-wayland"]
+	path = src/aw-watcher-window-wayland
+	url = https://github.com/jonathanhfmills/aw-watcher-window-wayland.git
+[submodule "src/jonathanhfmills"]
+	path = src/jonathanhfmills
+	url = https://github.com/jonathanhfmills/jonathanhfmills.git

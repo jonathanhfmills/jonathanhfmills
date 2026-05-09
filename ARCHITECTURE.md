@@ -32,11 +32,19 @@ orchestrator (main)
 
 ## Projects (submodules)
 
-Replace this table with your actual projects:
+| Path | Remote | Branch |
+|------|--------|--------|
+| `src/dotfiles-wsl/` | github.com/jonathanhfmills/dotfiles-wsl | `master` |
+| `src/git-orchestrator/` | github.com/jonathanhfmills/git-orchestrator | `main` |
+| `src/skills/` | github.com/jonathanhfmills/skills | `main` |
+| `src/bicameral-mind-agents/` | github.com/jonathanhfmills/bicameral-mind-agents | `master` |
+| `src/fahrenheit-non-zero-floating-point-scale/` | github.com/jonathanhfmills/fahrenheit-non-zero-floating-point-scale | `main` |
+| `src/website-wp-bedrock-template/` | github.com/jonathanhfmills/website-wp-bedrock-template | `main` |
+| `src/website-wp-theme-template/` | github.com/jonathanhfmills/website-wp-theme-template | `main` |
+| `src/aw-watcher-window-wayland/` | github.com/jonathanhfmills/aw-watcher-window-wayland | `master` |
+| `src/jonathanhfmills/` | github.com/jonathanhfmills/jonathanhfmills | `main` |
 
-| Path | Remote | Branch strategy |
-|------|--------|----------------|
-| `src/<your-project>/` | GitHub / Azure / etc. | See ADR 0005 if sub-submodules exist |
+Note: `dotfiles-wsl` contains `bicameral-mind` as a sub-submodule (see ADR 0005). `dotfiles-template` not yet registered — empty repo, pending seed from `dotfiles-wsl`.
 
 ## Commit flow
 

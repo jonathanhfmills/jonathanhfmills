@@ -8,7 +8,15 @@ Container for all project submodules. Each subdirectory is a separate git reposi
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `[your-project]/` | Replace with your project submodule (see `[your-project]/AGENTS.md`) |
+| `dotfiles-wsl/` | WSL2 dev environment dotfiles; Universal Observer seed; contains `bicameral-mind` sub-submodule |
+| `git-orchestrator/` | Personal orchestrator template — the upstream of this repo |
+| `skills/` | Reusable OMC skills |
+| `bicameral-mind-agents/` | Debate engine agents (LogicAgent, nullclaw) |
+| `fahrenheit-non-zero-floating-point-scale/` | Fahrenheit non-zero floating point scale project |
+| `website-wp-bedrock-template/` | WordPress Bedrock project template |
+| `website-wp-theme-template/` | WordPress theme template |
+| `aw-watcher-window-wayland/` | ActivityWatch window watcher for Wayland |
+| `jonathanhfmills/` | GitHub profile README repo |
 
 ## For AI Agents
 
