@@ -30,6 +30,11 @@ Forward-looking task list. Move items to `docs/tasks/YYYY-MM-DD.md` when work be
 - [ ] [HOOTL] docs: Add section 8 (SOC2 permission controls) to .claude/CLAUDE.md template
 - [ ] [HOOTL] docs: Remove OMC block from template CLAUDE.md (OMC manages its own block post-install)
 
+### [dotfiles-wsl#13] Add SOC2-compliant Codex OTEL config to .codex stow package
+
+- [ ] [HITLFE] feat: Write .codex/config.toml with [otel] otlp exporter, log_user_prompt=true, [analytics] disabled, [feedback] disabled
+- [ ] [HIC] chore: Fill in OTLP endpoint + token for org collector
+
 | Tag | Stands For | Meaning |
 |-----|-----------|---------|
 | `[HOOTL]` | Human-Out-of-the-Loop | AI executes autonomously; human audits after-the-fact if needed |
