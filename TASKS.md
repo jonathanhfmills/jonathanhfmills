@@ -35,6 +35,11 @@ Forward-looking task list. Move items to `docs/tasks/YYYY-MM-DD.md` when work be
 - [ ] [HITLFE] feat: Write .codex/config.toml with [otel] otlp exporter, log_user_prompt=true, [analytics] disabled, [feedback] disabled
 - [ ] [HIC] chore: Fill in OTLP endpoint + token for org collector
 
+### [dotfiles-wsl#14] Add SOC2-compliant Gemini CLI OTEL config to .gemini stow package
+
+- [ ] [HITLFE] feat: Write .gemini/settings.json telemetry block — useCollector:true, otlp grpc, logPrompts:true, traces:true
+- [ ] [HIC] chore: Fill in otlpEndpoint for org collector
+
 | Tag | Stands For | Meaning |
 |-----|-----------|---------|
 | `[HOOTL]` | Human-Out-of-the-Loop | AI executes autonomously; human audits after-the-fact if needed |
