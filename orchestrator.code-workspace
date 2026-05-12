@@ -10,7 +10,7 @@
         }
     ],
     "settings": {
-        "window.title": "🦞 ${profileName} Workspace",
+        "window.title": "🤖 ${profileName} Workspace",
         "editor.formatOnSave": true,
         "workbench.colorCustomizations": {
             "titleBar.activeBackground": "#000",
@@ -48,12 +48,18 @@
             "terminal.ansiBlue": "#4285F4",
         },
         "files.exclude": {
-            //"**/.omc": true,
-            "**/vendor": true,
-            //"**/AGENTS.md": true,
+            "**/.codex": true,
+            "**/.omx": true,
+            "**/.claude": true,
+            "**/.omc": true,
+            "**/.gemini": true,
+            "**/.omg": true,
+            "**/.qwen": true,
+            "**/AGENTS.md": true,
             "**/CLAUDE.md": true,
             "**/GEMINI.md": true,
             "**/QWEN.md": true,
+            "**/vendor": true,
         },
     },
     "extensions": {
@@ -63,6 +69,8 @@
             "anthropic.claude-code",
             "Google.geminicodeassist",
             "qwenlm.qwen-code-vscode-ide-companion",
+            "ms-python.python",
+            "dbaeumer.vscode-eslint"
         ]
     },
 }
