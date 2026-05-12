@@ -1,0 +1,68 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "Master"
+        },
+        {
+            "path": "src",
+            "name": "Apprenctice"
+        }
+    ],
+    "settings": {
+        "window.title": "🦞 ${profileName} Workspace",
+        "editor.formatOnSave": true,
+        "workbench.colorCustomizations": {
+            "titleBar.activeBackground": "#000",
+            "titleBar.activeForeground": "#fff",
+            "activityBar.background": "#000",
+            "activityBar.foreground": "#fff",
+            "terminal.foreground": "#fff",
+            "terminal.background": "#000",
+            "activityBarBadge.background": "#f00",
+            "badge.background": "#f00",
+            "banner.background": "#f00",
+            "menu.border": "#00000000",
+            "menu.background": "#fff",
+            "menu.foreground": "#000",
+            "input.foreground": "#000",
+            "input.background": "#fff",
+            "input.border": "#00000000",
+            "panel.background": "#000",
+            "editor.background": "#000",
+            "button.background": "#4285F4",
+            "minimap.background": "#ffffff11",
+            "sideBar.background": "#000",
+            "scrollbar.background": "#000",
+            "scrollbarSlider.background": "#ffffff11",
+            "statusBar.background": "#000",
+            "tab.activeBackground": "#000",
+            "editorIndentGuide.background1": "#00000011",
+            "editorIndentGuide.background2": "#00000011",
+            "editorIndentGuide.background3": "#00000011",
+            "editorIndentGuide.background4": "#00000011",
+            "statusBarItem.remoteBackground": "#E95420",
+            "statusBarItem.remoteForeground": "#000000ae",
+            "terminal.ansiRed": "#DB4437",
+            "terminal.ansiGreen": "#0F9D58",
+            "terminal.ansiBlue": "#4285F4",
+        },
+        "files.exclude": {
+            //"**/.omc": true,
+            "**/vendor": true,
+            //"**/AGENTS.md": true,
+            "**/CLAUDE.md": true,
+            "**/GEMINI.md": true,
+            "**/QWEN.md": true,
+        },
+    },
+    "extensions": {
+        "recommendations": [
+            "ActivityWatch.aw-watcher-vscode",
+            "openai.chatgpt",
+            "anthropic.claude-code",
+            "Google.geminicodeassist",
+            "qwenlm.qwen-code-vscode-ide-companion",
+        ]
+    },
+}
