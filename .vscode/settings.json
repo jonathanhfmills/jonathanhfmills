@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/CLAUDE.md": true,
+    "**/GEMINI.md": true,
+    "**/QWEN.md": true,
+    "**/AGENTS.md": true,
+    "**/GLOSSARY.md": true,
+    "**/CONTEXT.md": true,
+    "**/ARCHITECTURE.md": true,
+    "**/CONTEXT-MAP.md": true
+  }
+}
