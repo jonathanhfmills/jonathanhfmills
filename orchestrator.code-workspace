@@ -10,7 +10,7 @@
         }
     ],
     "settings": {
-        "window.title": "🤖 ${profileName} Workspace",
+        "window.title": "🦾 ${profileName}",
         "editor.formatOnSave": true,
         "workbench.colorCustomizations": {
             "titleBar.activeBackground": "#000",
