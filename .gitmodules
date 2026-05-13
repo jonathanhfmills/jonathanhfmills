@@ -34,3 +34,6 @@
 [submodule "src/aw-android-adb"]
 	path = src/aw-android-adb
 	url = https://github.com/jonathanhfmills/aw-android-adb.git
+[submodule "src/lucid-memory"]
+	path = src/lucid-memory
+	url = https://github.com/jonathanhfmills/lucid-memory
