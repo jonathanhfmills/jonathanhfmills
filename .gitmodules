@@ -22,9 +22,6 @@
 [submodule "src/aw-watcher-window-wayland"]
 	path = src/aw-watcher-window-wayland
 	url = https://github.com/jonathanhfmills/aw-watcher-window-wayland.git
-[submodule "src/jonathanhfmills"]
-	path = src/jonathanhfmills
-	url = https://github.com/jonathanhfmills/jonathanhfmills.git
 [submodule "src/royalclaw"]
 	path = src/royalclaw
 	url = https://github.com/jonathanhfmills/royalclaw.git
