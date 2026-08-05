@@ -80,7 +80,9 @@ openclaw-gateway:
 		sudo -u wanda sh -c "jq --arg ws '$(USERSPACE_ROOT)' '.agents.defaults.workspace = \$$ws' /home/wanda/.openclaw/openclaw.json > /home/wanda/.openclaw/.openclaw.json.tmp && mv /home/wanda/.openclaw/.openclaw.json.tmp /home/wanda/.openclaw/openclaw.json"; \
 		echo "openclaw.json agents.defaults.workspace -> $(USERSPACE_ROOT)"; \
 	else \
-		echo "No /home/wanda/.openclaw/openclaw.json yet -- run 'openclaw onboard' as wanda first, then re-run 'make openclaw-gateway' to patch the workspace path."; \
+		sudo -u wanda sh -c "jq --arg ws '$(USERSPACE_ROOT)' '.agents.defaults.workspace = \$$ws' '$(CURDIR)/config/openclaw/openclaw.json.example' > /home/wanda/.openclaw/openclaw.json"; \
+		echo "Seeded /home/wanda/.openclaw/openclaw.json from config/openclaw/openclaw.json.example (workspace -> $(USERSPACE_ROOT))."; \
+		echo "Fill in the SET_ME apiKey fields (its own credentials, restore the rest from the 1Password backup if this is the reinstalled desktop box, or set new ones)."; \
 	fi
 
 # -- cosmo's hermes-scoped gateway ------------------------------------------------
@@ -95,9 +97,9 @@ hermes-gateway:
 		sudo -u cosmo sh -c "jq --arg ws '$(HERMES_ROOT)' '.agents.defaults.workspace = \$$ws | .gateway.port = 9119' /home/cosmo/.openclaw/openclaw.json > /home/cosmo/.openclaw/.openclaw.json.tmp && mv /home/cosmo/.openclaw/.openclaw.json.tmp /home/cosmo/.openclaw/openclaw.json"; \
 		echo "openclaw.json agents.defaults.workspace -> $(HERMES_ROOT), gateway.port -> 9119"; \
 	else \
-		sudo -u cosmo sh -c "jq -n --arg ws '$(HERMES_ROOT)' '{agents:{defaults:{workspace:\$$ws}},gateway:{port:9119,bind:\"loopback\"}}' > /home/cosmo/.openclaw/openclaw.json"; \
-		echo "Seeded fresh /home/cosmo/.openclaw/openclaw.json with workspace -> $(HERMES_ROOT), gateway.port -> 9119."; \
-		echo "Run 'openclaw onboard' as cosmo to fill in the rest (models, channels, etc.) -- it should preserve these two fields."; \
+		sudo -u cosmo sh -c "jq --arg ws '$(HERMES_ROOT)' '.agents.defaults.workspace = \$$ws | .gateway.port = 9119' '$(CURDIR)/config/openclaw/openclaw.json.example' > /home/cosmo/.openclaw/openclaw.json"; \
+		echo "Seeded /home/cosmo/.openclaw/openclaw.json from config/openclaw/openclaw.json.example (workspace -> $(HERMES_ROOT), port -> 9119)."; \
+		echo "Fill in the SET_ME apiKey fields with cosmo's OWN credentials -- do not reuse wanda's or jon's."; \
 	fi
 
 # -- cosmo's own claude/codex/gemini/qwen config, isolated from jon and wanda ----
