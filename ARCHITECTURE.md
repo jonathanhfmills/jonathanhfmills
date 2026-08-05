@@ -78,3 +78,4 @@ Work items enter `TASKS.md` when planned, move to the day's Daily Log when start
 | [0004](docs/adr/0004-hitl-task-classification.md) | HOOTL/HITLFE/HIC classification |
 | [0005](docs/adr/0005-submodule-branch-strategy.md) | Feature branch → PR into `main` for sub-submodules |
 | [0006](docs/adr/0006-local-dev-environment.md) | Docker stack + reverse proxy for local dev |
+| [0007](docs/adr/0007-gateway-service-accounts.md) | wanda/cosmo/lms accounts on wanda-box host the gateways + LM Studio; TTS/STT run on a separate machine, desktop (RTX 3080) |

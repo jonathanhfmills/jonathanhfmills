@@ -29,6 +29,11 @@ Standard tags for Daily Log line items and commit message types:
 - An **ADR** covers orchestrator-level decisions only; project-level decisions live in `src/<repo-name>/docs/adr/`
 - **ARCHITECTURE.md** is the living structural map; ADRs are the immutable log of why it got there
 - An **Issue** on the orchestrator's GitHub repo is the preferred AI-automation surface; the external issue tracker remains source of truth
+- A **Gateway** is a running instance of the openclaw gateway software; agent compute runs locally on the same headless machine, with Tailscale serve reachable for control-plane clients only (e.g. the openclaw phone app), not remote agent compute
+- **wanda** is the dedicated no-sudo service account hosting the openclaw-scoped Gateway, workspace-rooted at the orchestrator (`/home/jon/userspace`); it can read but not write into the Hermes Operator's workspace (see ADR 0007)
+- **cosmo** is the dedicated no-sudo service account hosting the hermes-scoped Gateway, workspace-rooted at `src/workspace` only, with no access outside it (see ADR 0007)
+- **lms** is the dedicated no-sudo service account on wanda-box running the shared LM Studio (ROCm) chat/vision inference server; it has no ACL access into `userspace` at all, and **wanda**/**cosmo** call it only as an HTTP client over loopback (see ADR 0007)
+- **desktop** is a separate physical machine (RTX 3080, native CUDA), not part of the wanda/cosmo/lms boundary, hosting TTS (faster-qwen3-tts) and STT (faster-whisper) reachable by wanda-box over the tailnet (see ADR 0007)
 
 ## Example
 

@@ -40,3 +40,7 @@ A personal orchestrator repository that manages project submodules, tracks daily
 - Issue tracker (e.g. JIRA at `[your-instance].atlassian.net`) — source of truth for all work items; work item IDs (e.g. `PROJ-42`) appear in daily logs
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->
+
+## Root-level Makefile
+
+`Makefile` + `config/systemd/` at this root provision the gateway/GPU-inference accounts and services described in `docs/adr/0007-gateway-service-accounts.md` — `make help` for the full target list. This is orchestrator-root-scoped (spans the whole tree, touches system accounts), distinct from `src/workspace/Makefile`, which stays scoped to the Hermes Operator's own dev tooling.

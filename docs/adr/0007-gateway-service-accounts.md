@@ -1,0 +1,62 @@
+# Dedicated wanda/cosmo/lms service accounts on wanda-box host the gateways and LM Studio; TTS/STT run on desktop instead
+
+## Status
+Accepted
+
+## Context
+An openclaw gateway already runs on wanda-box (the 13600K, 32GB DDR4, AMD 9070 XT machine) under a pre-existing unprivileged system account whose login is literally `user` (home `/home/openclaw`, GECOS `openclaw`) — a naming mismatch left over from earlier setup. It listens on port 18789, is exposed remotely via Tailscale serve (`svc:openclaw`), and its configured agent workspace is `~/.openclaw/workspace` — a stale duplicate clone of the Hermes Operator, independent from the canonical copy mounted at `src/workspace` in this repo.
+
+The plan is to run the Hermes Operator's own gateway (default port 9119) on that same wanda-box machine, alongside the openclaw gateway — a single secure headless machine for both gateways, MVP scope. Agent compute (small local models) runs on that same box, not on a separate machine; Tailscale serve stays in place so control-plane clients (openclaw's phone app, other devices) can reach the gateways remotely, but no remote machine hosts agent *reasoning*. Current wanda-box hardware is sized for small models; this is expected to migrate later to a 64GB AMD Strix Halo box for larger models — the account/ACL/sandboxing boundary in this ADR is meant to carry over unchanged across that hardware move.
+
+Requirement: the openclaw-scoped gateway must be able to see (read-only) into the hermes-scoped workspace; the hermes-scoped gateway must have zero visibility outside its own workspace. `jon` has sudo, so running either gateway under `jon`'s own account would defeat any sandboxing built on top of it — an account that can escalate to root is not a real boundary.
+
+wanda-box also has a discrete AMD 9070 XT (16GB VRAM). Both the openclaw and hermes agents need to run chat/vision inference against it, via a single shared LM Studio (ROCm) server rather than two competing GPU processes. Coupling that server's lifecycle to either gateway account (spawned as its child process) would force that gateway's systemd unit to drop `PrivateDevices=true` and gain `/dev/dri`/`/dev/kfd` access — undermining the sandboxing this ADR exists to establish, and leaking GPU-device permissions to whichever gateway happens to own the server.
+
+Separately, there's a second physical machine already on the tailnet, `desktop` (formerly identified as `cosmo` before a hostname rename — an i7-8700K with an **NVIDIA RTX 3080**, real CUDA). It's jon's own regular, already-trusted desktop, not part of the wanda/cosmo/lms account-sandboxing model. The two media models openclaw's config already references — TTS (`qwen3-tts`, wired to a `qwen-tts` conda env in the old setup) and STT (`parakeet`) — both have upstream software that documents NVIDIA/CUDA only, with no ROCm/AMD support: `faster-qwen3-tts` (for TTS) and `faster-whisper` (for STT, via the `speaches` OpenAI-compatible wrapper, since faster-whisper itself is just a library). Running either on wanda-box's AMD GPU would mean an unverified ROCm substitution at best (`faster-qwen3-tts` uses PyTorch, which does ship ROCm wheels) or no GPU acceleration at all (`faster-whisper`'s `ctranslate2` backend has no ROCm path whatsoever). `desktop`'s RTX 3080 runs both natively as documented, with no substitution risk.
+
+## Decision
+**wanda-box** hosts three dedicated no-sudo system accounts, each scoped to a different subtree of `/home/jon/userspace`:
+
+- **wanda** — openclaw-scoped gateway. Workspace root `/home/jon/userspace` (the whole orchestrator tree). Port 18789, Tailscale `svc:openclaw`. This is the pre-existing account, renamed via `usermod -l` so login/home/GECOS agree.
+- **cosmo** — hermes-scoped gateway (new). Workspace root `/home/jon/userspace/src/workspace` only. Port 9119 (Hermes' own dashboard default). Also holds its own isolated Claude/Codex/Gemini/Qwen CLI config and credentials (see below).
+- **lms** — shared GPU inference, LM Studio only (chat/vision models). The only account in `video`/`render` groups and the only one with GPU device access; `wanda` and `cosmo` keep `PrivateDevices=true` and call it purely as an HTTP client over loopback (matching the existing `models.providers.lmstudio.baseUrl: http://127.0.0.1:1234` config). `lms` has no ACL access into `userspace` at all — it never touches either workspace, only serves inference over loopback.
+
+The `wanda`/`cosmo` boundary is enforced at two independent layers:
+1. **POSIX ACL** — `wanda` gets `rwx` on `/home/jon/userspace`, downgraded to `r-x` (read, no write) specifically on `src/workspace`, so it can see but not modify the hermes workspace. `cosmo` gets `rwx` on `src/workspace` only — no ACL entry anywhere else in `userspace` or in `jon`'s home.
+2. **systemd namespace sandboxing** — each gateway's `systemd --user` unit uses `ProtectHome=tmpfs` + `BindPaths` restricted to its own scope, so even a DAC misconfiguration wouldn't expose paths that were never bind-mounted into that unit's mount namespace.
+
+`jon` remains the sole sudo-capable admin owner of everything under `userspace`; none of `wanda`, `cosmo`, or `lms` has sudo or any access outside its own scope.
+
+`cosmo` also gets its own isolated `~/.claude`, `~/.codex`, `~/.gemini`, `~/.qwen` — seeded from non-secret defaults in the new root-level `config/claude/` (empty `.mcp.json`, sandbox-off `settings.local.json`; codex/gemini/qwen start empty and self-populate), then logged into separately so its credentials are its own, not jon's or wanda's. `hermes-gateway.service`'s `BindPaths` includes all four so the sandboxed gateway can actually invoke these CLIs. This matters because `cosmo` is the account that will actually shell out to Claude/Gemini/Codex/Qwen per the Hermes Operator's debate-role architecture (see `src/workspace/CONTEXT.md`'s Debate Flow) — if it shared jon's or wanda's credentials, a compromised hermes agent could reach whatever those accounts' tokens are scoped to. `wanda` is meant to get the same treatment once it also runs agent runtimes directly, but that's explicitly **not MVP** — deferred until needed.
+
+**desktop** (the RTX 3080 machine, separate from wanda-box) runs TTS and STT natively as `jon` directly — no account sandboxing, since desktop isn't part of the wanda/cosmo/lms security boundary and there's no adjacent hermes/openclaw workspace on it to protect:
+- **TTS**: [faster-qwen3-tts](https://github.com/andimarafioti/faster-qwen3-tts), via `examples/openai_server.py` (OpenAI-compatible `/v1/audio/speech`, port 8000), native CUDA.
+- **STT**: faster-whisper (a turbo model variant) via the `speaches` OpenAI-compatible wrapper, native CUDA, port 8001.
+
+wanda-box's openclaw config points at both over the tailnet (`desktop.mist-cat.ts.net:8000` / `:8001`) instead of loopback.
+
+This lives in a **new root-level Makefile/config** at `/home/jon/userspace` (not `src/workspace/Makefile`, which stays scoped to the Hermes Operator's own dev tooling — language runtimes, editor configs — uncontaminated by orchestrator-root concerns). It has two independent target groups: `gateway-accounts` / `gateway-acls` / `openclaw-gateway` / `hermes-gateway` / `lms-cli` / `lms-server` / `gateways` (run on wanda-box), and `desktop-tts` / `desktop-stt` (run on desktop). The gateway units are named for their role (`openclaw-gateway.service`, `hermes-gateway.service`), not their account (`wanda`, `cosmo`) — matching the pre-existing `openclaw-gateway.service` name already in use before this migration. Its `config/systemd/` holds the five unit files. This is itself the first instance of a planned pattern — dotfiles scoped per level of the orchestrator's hierarchy (userspace → workspace → agency → customer → project) — but only the userspace level is built now; the rest is deferred until a concrete need for it appears, not built speculatively ahead of time.
+
+## Considered Options
+- **Single shared unprivileged account for both gateways** — rejected: the one-way visibility requirement would then rest entirely on systemd namespace sandboxing, with no DAC-level backstop if that layer were ever bypassed.
+- **Run one or both gateways as `jon`** — rejected: `jon` has sudo; a sandbox built on top of a root-capable account isn't a boundary.
+- **Shared Unix group + `chgrp -R` across the tree** — rejected: touches ownership of every existing file and drifts out of sync as new files are created without inherited group bits. ACLs give the same asymmetric read/write split without restructuring ownership.
+- **Leave the openclaw account's login as `user`** — rejected: login/home-dir/GECOS mismatch was already confusing; fix it once while touching this account anyway.
+- **wanda (or cosmo) launches/owns the LM Studio server as its child process** — rejected: forces that gateway's unit to drop `PrivateDevices=true` and gain raw GPU device access just to spawn a child, and creates an arbitrary ownership dependency (the other gateway needs it just as much).
+- **Run LM Studio as `jon`** — rejected: couples a long-running GPU server to the admin account; a dedicated `lms` account keeps the same no-sudo/minimal-scope pattern as `wanda`/`cosmo` instead of carving out an exception.
+- **Run TTS/STT on wanda-box's `lms` account (ROCm substitution / CPU-only)** — rejected once `desktop`'s RTX 3080 was factored in: both upstream projects document CUDA only, and a second real machine with actual CUDA was already available on the tailnet. Using it avoids an unverified ROCm PyTorch substitution for TTS entirely and gets real GPU acceleration for STT instead of ctranslate2's CPU-only fallback.
+- **Give `lms` on wanda-box GPU-passthrough to desktop's GPU somehow** — not pursued: no sane mechanism for one machine's systemd unit to access another machine's PCIe device; the natural boundary is the network call these services already speak (OpenAI-compatible HTTP).
+- **`cosmo` shares jon's or wanda's `~/.claude`/`~/.codex`/`~/.gemini`/`~/.qwen` credentials** — rejected: defeats the whole point of the account boundary; a breakout from the hermes gateway would inherit whatever those credentials are scoped to instead of just cosmo's own.
+- **Give `wanda` its own CLI-tool config now too** — deferred, not rejected: wanda doesn't invoke these runtimes directly yet (not MVP). Revisit when it does, applying the same pattern.
+
+## Consequences
+- Fresh-machine bootstrap on wanda-box now requires sudo-driven account creation and ACL setup, not just dotfile stow — the Makefile's scope grows beyond pure user-level tooling.
+- Both gateways' configs need `agents.defaults.workspace` updated: `wanda` → `/home/jon/userspace`, `cosmo` → `/home/jon/userspace/src/workspace`. The old duplicate clone at `/home/openclaw/.openclaw/workspace` is retired once the migration is verified working.
+- Renaming the existing account's login from `user` to `wanda` means anything still referencing the old login (the `openclaw-gateway.service` unit's implicit user context, any scripts/cron) needs updating in the same pass — a one-time migration risk on a currently-live service.
+- Adding a fourth account/scope later on wanda-box means repeating the two-layer (ACL + BindPaths) pattern explicitly — no shared abstraction was introduced.
+- `wanda` and `cosmo` both depend on `lms` being up for chat/vision inference to work; if it's down, both gateways degrade together — a shared single point of failure traded for GPU isolation.
+- wanda-box's config now depends on a second physical machine (`desktop`) being reachable over the tailnet for TTS/STT; if `desktop` is offline, those two capabilities degrade even though the gateways themselves stay up.
+- `lms`'s headless CLI (`lms server`) has no verified unattended install command yet — `make lms-cli` stubs this pending manual confirmation, same as `speaches`' non-Docker launch command for `desktop-stt`.
+- STT runs on `desktop` at real GPU speed (turbo model) rather than the CPU-only fallback that would've been necessary on wanda-box's AMD GPU.
+- `cosmo` needs its own manual login for each CLI tool (`claude login` etc.) after `make cosmo-cli-config` — not automatable, since each is a separate credential from jon's/wanda's by design.
+- When wanda gets the same CLI-tool treatment later, `openclaw-gateway.service`'s `BindPaths` will need the same four paths added, mirroring this change to `hermes-gateway.service`.

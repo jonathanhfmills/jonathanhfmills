@@ -1,0 +1,21 @@
+[Unit]
+Description=faster-whisper STT server via speaches (desktop, RTX 3080, native CUDA, turbo model)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# TODO: confirm exact non-Docker launch command for speaches once installed --
+# its docs primarily document Docker Compose. Set WHISPER_MODEL to a turbo variant
+# (e.g. large-v3-turbo) and device=cuda once confirmed.
+ExecStart=%h/.venvs/speaches/bin/python -m speaches --port 8001
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+OOMPolicy=continue
+KillMode=control-group
+Environment=HOME=%h
+Environment=TMPDIR=/tmp
+
+[Install]
+WantedBy=default.target
