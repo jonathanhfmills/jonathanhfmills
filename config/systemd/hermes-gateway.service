@@ -1,0 +1,54 @@
+[Unit]
+Description=Hermes Gateway (cosmo, scoped to /home/jon/userspace/src/workspace)
+After=network-online.target
+Wants=network-online.target
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Service]
+ExecStart=%h/.npm-global/lib/node_modules/openclaw/dist/index.js gateway --port 9119
+Restart=always
+RestartSec=5
+RestartPreventExitStatus=78
+TimeoutStopSec=30
+TimeoutStartSec=30
+SuccessExitStatus=0 143
+OOMPolicy=continue
+KillMode=control-group
+EnvironmentFile=-%h/.openclaw/gateway.systemd.env
+Environment=HOME=%h
+Environment=TMPDIR=/tmp
+Environment=OPENCLAW_GATEWAY_PORT=9119
+Environment=OPENCLAW_SERVICE_MARKER=hermes
+Environment=OPENCLAW_SERVICE_KIND=gateway
+
+# -- Kernel-level sandbox: namespace scoping, no containers --
+ProtectSystem=strict
+PrivateTmp=true
+RemoveIPC=true
+RestrictNamespaces=yes
+ProtectHome=tmpfs
+BindPaths=%h/.openclaw /home/jon/userspace/src/workspace %h/.claude %h/.codex %h/.gemini %h/.qwen
+BindReadOnlyPaths=%h/.npm-global
+InaccessiblePaths=/root /home/wanda /home/lms
+ProtectProc=invisible
+ProcSubset=pid
+NoNewPrivileges=true
+CapabilityBoundingSet=
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+PrivateDevices=true
+ProtectClock=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectHostname=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
+
+[Install]
+WantedBy=default.target

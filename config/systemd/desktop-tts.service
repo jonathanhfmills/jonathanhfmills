@@ -1,0 +1,18 @@
+[Unit]
+Description=faster-qwen3-tts OpenAI-compatible TTS server (desktop, RTX 3080, native CUDA)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=%h/.venvs/faster-qwen3-tts/bin/python %h/faster-qwen3-tts/examples/openai_server.py --ref-audio %h/faster-qwen3-tts/ref_audio.wav --ref-text "reference text placeholder -- replace with your actual reference clip transcript" --language English --port 8000
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+OOMPolicy=continue
+KillMode=control-group
+Environment=HOME=%h
+Environment=TMPDIR=/tmp
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,48 @@
+[Unit]
+Description=LM Studio headless inference server (lms), shared by wanda + cosmo gateways over loopback
+After=network-online.target
+Wants=network-online.target
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Service]
+ExecStart=%h/.lmstudio/bin/lms server start --port 1234
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+OOMPolicy=continue
+KillMode=control-group
+Environment=HOME=%h
+Environment=TMPDIR=/tmp
+
+# -- Kernel-level sandbox: this is the ONLY account with GPU device access --
+ProtectSystem=strict
+PrivateTmp=true
+RemoveIPC=true
+RestrictNamespaces=yes
+ProtectHome=tmpfs
+BindPaths=%h/.lmstudio %h/.cache
+InaccessiblePaths=/root /home/jon /home/wanda /home/cosmo
+ProtectProc=invisible
+ProcSubset=pid
+NoNewPrivileges=true
+CapabilityBoundingSet=
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+# PrivateDevices intentionally omitted: this account needs /dev/dri + /dev/kfd for ROCm.
+# GPU access instead comes from group membership (video, render) applied to this account only.
+ProtectClock=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectHostname=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
+
+[Install]
+WantedBy=default.target

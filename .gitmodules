@@ -34,3 +34,6 @@
 [submodule "src/lucid-memory"]
 	path = src/lucid-memory
 	url = https://github.com/jonathanhfmills/lucid-memory
+[submodule "src/workspace"]
+	path = src/workspace
+	url = git@github.com:HellFireAE/HellFireAE.git
