@@ -70,22 +70,35 @@ gateway-acls:
 
 # -- wanda's openclaw-scoped gateway ---------------------------------------------
 openclaw-gateway:
+	@command -v jq >/dev/null || { echo "jq not found -- install it first (it's in src/workspace/Makefile's apt target, or: sudo pacman -S jq / sudo apt-get install jq)"; exit 1; }
 	sudo -u wanda mkdir -p /home/wanda/.config/systemd/user
 	sudo cp "$(CURDIR)/config/systemd/openclaw-gateway.service" /home/wanda/.config/systemd/user/openclaw-gateway.service
 	sudo chown wanda:wanda /home/wanda/.config/systemd/user/openclaw-gateway.service
 	sudo -u wanda XDG_RUNTIME_DIR=/run/user/$$(id -u wanda) systemctl --user daemon-reload
 	sudo -u wanda XDG_RUNTIME_DIR=/run/user/$$(id -u wanda) systemctl --user enable --now openclaw-gateway.service
-	@echo "openclaw-gateway installed. Update /home/wanda/.openclaw/openclaw.json: agents.defaults.workspace -> $(USERSPACE_ROOT)"
+	@if sudo -u wanda test -f /home/wanda/.openclaw/openclaw.json; then \
+		sudo -u wanda sh -c "jq --arg ws '$(USERSPACE_ROOT)' '.agents.defaults.workspace = \$$ws' /home/wanda/.openclaw/openclaw.json > /home/wanda/.openclaw/.openclaw.json.tmp && mv /home/wanda/.openclaw/.openclaw.json.tmp /home/wanda/.openclaw/openclaw.json"; \
+		echo "openclaw.json agents.defaults.workspace -> $(USERSPACE_ROOT)"; \
+	else \
+		echo "No /home/wanda/.openclaw/openclaw.json yet -- run 'openclaw onboard' as wanda first, then re-run 'make openclaw-gateway' to patch the workspace path."; \
+	fi
 
 # -- cosmo's hermes-scoped gateway ------------------------------------------------
 hermes-gateway:
+	@command -v jq >/dev/null || { echo "jq not found -- install it first (it's in src/workspace/Makefile's apt target, or: sudo pacman -S jq / sudo apt-get install jq)"; exit 1; }
 	sudo -u cosmo mkdir -p /home/cosmo/.config/systemd/user /home/cosmo/.openclaw
 	sudo cp "$(CURDIR)/config/systemd/hermes-gateway.service" /home/cosmo/.config/systemd/user/hermes-gateway.service
 	sudo chown cosmo:cosmo /home/cosmo/.config/systemd/user/hermes-gateway.service
 	sudo -u cosmo XDG_RUNTIME_DIR=/run/user/$$(id -u cosmo) systemctl --user daemon-reload
 	sudo -u cosmo XDG_RUNTIME_DIR=/run/user/$$(id -u cosmo) systemctl --user enable --now hermes-gateway.service
-	@echo "hermes-gateway installed. Populate /home/cosmo/.openclaw/openclaw.json with:"
-	@echo "  agents.defaults.workspace -> $(HERMES_ROOT), gateway.port -> 9119"
+	@if sudo -u cosmo test -f /home/cosmo/.openclaw/openclaw.json; then \
+		sudo -u cosmo sh -c "jq --arg ws '$(HERMES_ROOT)' '.agents.defaults.workspace = \$$ws | .gateway.port = 9119' /home/cosmo/.openclaw/openclaw.json > /home/cosmo/.openclaw/.openclaw.json.tmp && mv /home/cosmo/.openclaw/.openclaw.json.tmp /home/cosmo/.openclaw/openclaw.json"; \
+		echo "openclaw.json agents.defaults.workspace -> $(HERMES_ROOT), gateway.port -> 9119"; \
+	else \
+		sudo -u cosmo sh -c "jq -n --arg ws '$(HERMES_ROOT)' '{agents:{defaults:{workspace:\$$ws}},gateway:{port:9119,bind:\"loopback\"}}' > /home/cosmo/.openclaw/openclaw.json"; \
+		echo "Seeded fresh /home/cosmo/.openclaw/openclaw.json with workspace -> $(HERMES_ROOT), gateway.port -> 9119."; \
+		echo "Run 'openclaw onboard' as cosmo to fill in the rest (models, channels, etc.) -- it should preserve these two fields."; \
+	fi
 
 # -- cosmo's own claude/codex/gemini/qwen config, isolated from jon and wanda ----
 # wanda gets the same treatment eventually (per docs/adr/0007) but is not MVP yet.

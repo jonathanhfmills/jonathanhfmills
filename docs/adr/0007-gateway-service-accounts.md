@@ -51,7 +51,7 @@ This lives in a **new root-level Makefile/config** at `/home/jon/userspace` (not
 
 ## Consequences
 - Fresh-machine bootstrap on wanda-box now requires sudo-driven account creation and ACL setup, not just dotfile stow — the Makefile's scope grows beyond pure user-level tooling.
-- Both gateways' configs need `agents.defaults.workspace` updated: `wanda` → `/home/jon/userspace`, `cosmo` → `/home/jon/userspace/src/workspace`. The old duplicate clone at `/home/openclaw/.openclaw/workspace` is retired once the migration is verified working.
+- Both gateways' configs need `agents.defaults.workspace` updated: `wanda` → `/home/jon/userspace`, `cosmo` → `/home/jon/userspace/src/workspace`. `openclaw-gateway`/`hermes-gateway` do this automatically via `jq` — patching `openclaw.json` in place if it exists (the `wanda` rename case), or seeding a fresh minimal one if it doesn't (the `cosmo` case, which has no prior config at all). The old duplicate clone at `/home/openclaw/.openclaw/workspace` is retired once the migration is verified working.
 - Renaming the existing account's login from `user` to `wanda` means anything still referencing the old login (the `openclaw-gateway.service` unit's implicit user context, any scripts/cron) needs updating in the same pass — a one-time migration risk on a currently-live service.
 - Adding a fourth account/scope later on wanda-box means repeating the two-layer (ACL + BindPaths) pattern explicitly — no shared abstraction was introduced.
 - `wanda` and `cosmo` both depend on `lms` being up for chat/vision inference to work; if it's down, both gateways degrade together — a shared single point of failure traded for GPU isolation.
