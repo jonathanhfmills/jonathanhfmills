@@ -8,7 +8,6 @@
 ## Key Files
 | File | Description |
 |------|-------------|
-| `TASKS.md` | 前瞻性待辦事項積壓（已規劃未啟動） |
 | `GLOSSARY.md` | 協調器概念標準術語定義（專案、工作項、日誌、HITL標籤等） |
 | `LANGUAGE.md` | AI代理拒絕的框架、行為準則、已解決的歧義 |
 | `CONTEXT.md` | 關聯、範例、標籤參考、HITL分類框架 |
@@ -30,7 +29,7 @@
 
 ### Common Patterns
 - 新增日常工作置於 `docs/tasks/YYYY-MM-DD.md`，其內容源自 `docs/tasks/YYYY-MM-DD.md`（範本）。
-- 規劃工作項歸於 `TASKS.md`，直至工作啟動；隨後移至日常記錄。
+- 規劃中尚未啟動之工作項，歸於外部問題追蹤系統（issue tracker），不設本機積壓清單（見 ADR 0008）。
 - ADRs 歸於 `docs/adr/`，僅涵蓋協調層級決策。專案層級決策則居於子模組自身 `docs/adr/` 內。
 
 ## Dependencies

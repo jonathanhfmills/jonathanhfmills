@@ -7,7 +7,6 @@ This is a personal orchestrator repository. It owns planning, tracking, and tool
 ```
 orchestrator (main)
 ├── ARCHITECTURE.md   ← this file; living map of current system state
-├── TASKS.md          ← forward-looking backlog
 ├── CONTEXT.md        ← domain relationships and examples
 ├── CONTEXT-MAP.md    ← bounded context index (multi-context repo)
 ├── GLOSSARY.md       ← canonical term definitions
@@ -23,7 +22,7 @@ orchestrator (main)
 
 | Concern | Location |
 |---------|----------|
-| Forward planning | `TASKS.md` |
+| Forward planning | External issue tracker / GitHub Issues (see ADR 0008) |
 | Daily work tracking | `docs/tasks/YYYY-MM-DD.md` |
 | Architectural decisions | `docs/adr/` |
 | Domain language | `GLOSSARY.md`, `LANGUAGE.md` |
@@ -49,10 +48,10 @@ Reversing the order creates redundant pointer-update commits (see ADR 0001).
 ## Planning → execution pipeline
 
 ```
-External tracker (source of truth) → TASKS.md (backlog) → Daily Log → commit
+External tracker (source of truth) → Daily Log → commit
 ```
 
-Work items enter `TASKS.md` when planned, move to the day's Daily Log when started, and close on lead-developer sign-off — not on commit (see ADR 0003).
+Work items live in the external issue tracker while planned; they enter the day's Daily Log when started, and close on lead-developer sign-off — not on commit (see ADR 0003, ADR 0008).
 
 ## ADR index
 
@@ -65,3 +64,4 @@ Work items enter `TASKS.md` when planned, move to the day's Daily Log when start
 | [0005](docs/adr/0005-submodule-branch-strategy.md) | Feature branch → PR into `main` for sub-submodules |
 | [0006](docs/adr/0006-local-dev-environment.md) | Docker stack + reverse proxy for local dev |
 | [0007](docs/adr/0007-gateway-service-accounts.md) | wanda/cosmo/lms accounts on wanda-box host the gateways + LM Studio; TTS/STT run on a separate machine, desktop (RTX 3080) |
+| [0008](docs/adr/0008-retire-tasks-md.md) | `TASKS.md` retired; planned work lives in the issue tracker only |
