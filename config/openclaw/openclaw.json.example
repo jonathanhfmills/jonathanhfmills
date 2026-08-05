@@ -1,0 +1,661 @@
+{
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "allowTailscale": true,
+      "token": {
+        "source": "env",
+        "provider": "default",
+        "id": "OPENCLAW_GATEWAY_TOKEN"
+      }
+    },
+    "tailscale": {
+      "mode": "serve",
+      "serviceName": "svc:openclaw",
+      "resetOnExit": false
+    },
+    "bind": "loopback",
+    "port": 18789,
+    "controlUi": {
+      "allowedOrigins": [
+        "https://cosmo.mist-cat.ts.net"
+      ]
+    }
+  },
+  "models": {
+    "mode": "replace",
+    "providers": {
+      "lmstudio": {
+        "baseUrl": "http://127.0.0.1:1234",
+        "apiKey": "SET_ME",
+        "api": "anthropic-messages",
+        "maxTokens": 4096
+      },
+      "qwen": {
+        "baseUrl": "http://127.0.0.1:4170",
+        "apiKey": "SET_ME"
+      },
+      "openai": {
+        "baseUrl": "http://127.0.0.1:8001/v1",
+        "apiKey": "SET_ME",
+        "request": {
+          "allowPrivateNetwork": true
+        }
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "__WORKSPACE__",
+      "model": "lmstudio/qwen3.5-9b-mtp",
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "5m"
+      },
+      "memorySearch": {
+        "provider": "lmstudio",
+        "model": "lmstudio/gemma-4-e4b-it-qat",
+        "outputDimensionality": 2048,
+        "fallback": "none",
+        "multimodal": {
+          "enabled": true,
+          "modalities": [
+            "image",
+            "audio"
+          ]
+        },
+        "extraPaths": [
+          "./memory/media"
+        ],
+        "query": {
+          "hybrid": {
+            "mmr": {
+              "enabled": true
+            },
+            "temporalDecay": {
+              "enabled": true
+            }
+          }
+        }
+      },
+      "compaction": {
+        "model": "lmstudio/gemma-4-12b-it-qat",
+        "memoryFlush": {
+          "model": "lmstudio/gemma-4-12b-it-qat"
+        }
+      },
+      "experimental": {
+        "localModelLean": true
+      },
+      "models": {}
+    },
+    "list": [
+      {
+        "id": "main",
+        "name": "Wanda",
+        "tools": {
+          "profile": "full"
+        }
+      }
+    ]
+  },
+  "acp": {
+    "enabled": true,
+    "dispatch": {
+      "enabled": true
+    },
+    "backend": "acpx",
+    "defaultAgent": "claude",
+    "allowedAgents": [
+      "claude",
+      "codex",
+      "gemini",
+      "openclaw",
+      "qwen"
+    ],
+    "maxConcurrentSessions": 5,
+    "stream": {
+      "coalesceIdleMs": 350,
+      "maxChunkChars": 1800
+    },
+    "runtime": {
+      "ttlMinutes": 120
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.7.1-2",
+    "lastTouchedAt": "2026-08-02T22:54:56.231Z"
+  },
+  "commitments": {
+    "enabled": true
+  },
+  "plugins": {
+    "entries": {
+      "google": {
+        "enabled": false,
+        "config": {
+          "webSearch": {
+            "model": "lmstudio/gemma-4-12b-it-qat",
+            "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+            "apiKey": "SET_ME"
+          }
+        }
+      },
+      "memory-core": {
+        "enabled": true,
+        "config": {
+          "dreaming": {
+            "enabled": true
+          }
+        }
+      },
+      "memory-wiki": {
+        "enabled": true,
+        "config": {
+          "search": {
+            "backend": "shared",
+            "corpus": "all"
+          },
+          "context": {
+            "includeCompiledDigestPrompt": true
+          }
+        }
+      },
+      "active-memory": {
+        "enabled": true,
+        "config": {
+          "model": "lmstudio/gemma-4-12b-it-qat",
+          "modelFallback": "lmstudio/gemma-4-e4b-it-qat",
+          "agents": [
+            "main",
+            "env",
+            "mue",
+            "ntr"
+          ],
+          "queryMode": "full",
+          "logging": true
+        }
+      },
+      "workboard": {
+        "enabled": true
+      },
+      "qwen": {
+        "enabled": true
+      },
+      "open-prose": {
+        "enabled": true
+      },
+      "acpx": {
+        "enabled": true,
+        "config": {
+          "pluginToolsMcpBridge": true,
+          "timeoutSeconds": 180,
+          "permissionMode": "approve-reads",
+          "probeAgent": "claude",
+          "nonInteractivePermissions": "deny"
+        }
+      },
+      "discord": {
+        "enabled": true
+      },
+      "xiaomi": {
+        "enabled": false
+      },
+      "xai": {
+        "enabled": false
+      },
+      "vydra": {
+        "enabled": false
+      },
+      "volcengine": {
+        "enabled": false
+      },
+      "synthetic": {
+        "enabled": false
+      },
+      "voyage": {
+        "enabled": false
+      },
+      "together": {
+        "enabled": false
+      },
+      "thread-ownership": {
+        "enabled": false
+      },
+      "anthropic": {
+        "enabled": false
+      },
+      "runway": {
+        "enabled": false
+      },
+      "senseaudio": {
+        "enabled": false
+      },
+      "openrouter": {
+        "enabled": false
+      },
+      "litellm": {
+        "enabled": false
+      },
+      "alibaba": {
+        "enabled": false
+      },
+      "vllm": {
+        "enabled": false
+      },
+      "opencode": {
+        "enabled": false
+      },
+      "sglang": {
+        "enabled": false
+      },
+      "openai": {
+        "enabled": true
+      },
+      "nvidia": {
+        "enabled": false
+      },
+      "ollama": {
+        "enabled": false
+      },
+      "meta": {
+        "enabled": false
+      },
+      "huggingface": {
+        "enabled": false
+      },
+      "novita": {
+        "enabled": false
+      },
+      "mistral": {
+        "enabled": false
+      },
+      "microsoft": {
+        "enabled": false
+      },
+      "minimax": {
+        "enabled": false
+      },
+      "microsoft-foundry": {
+        "enabled": false
+      },
+      "github-copilot": {
+        "enabled": false
+      },
+      "azure-speech": {
+        "enabled": false
+      },
+      "byteplus": {
+        "enabled": false
+      },
+      "clawrouter": {
+        "enabled": false
+      },
+      "cohere": {
+        "enabled": false
+      },
+      "comfy": {
+        "enabled": false
+      },
+      "fal": {
+        "enabled": false
+      },
+      "elevenlabs": {
+        "enabled": false
+      },
+      "deepgram": {
+        "enabled": false
+      },
+      "copilot-proxy": {
+        "enabled": false
+      },
+      "google-meet": {
+        "enabled": true
+      },
+      "voice-call": {
+        "config": {
+          "realtime": {
+            "provider": "openai",
+            "providers": {
+              "openai": {
+                "apiKey": "SET_ME",
+                "baseUrl": "http://127.0.0.1:8000/v1",
+                "model": "lmstudio/qwen3-tts"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "skills": {
+    "entries": {
+      "blogwatcher": {
+        "enabled": false
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "coding-agent": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": false
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "gemini": {
+        "enabled": false
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "gog": {
+        "enabled": true
+      },
+      "goplaces": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "mcporter": {
+        "enabled": false
+      },
+      "nano-pdf": {
+        "enabled": false
+      },
+      "obsidian": {
+        "enabled": false
+      },
+      "openai-whisper": {
+        "enabled": false
+      },
+      "openai-whisper-api": {
+        "enabled": false
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "oracle": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": false
+      },
+      "sherpa-onnx-tts": {
+        "enabled": false
+      },
+      "songsee": {
+        "enabled": false
+      },
+      "sonoscli": {
+        "enabled": false
+      },
+      "spotify-player": {
+        "enabled": false
+      },
+      "summarize": {
+        "enabled": true
+      },
+      "trello": {
+        "enabled": false
+      },
+      "xurl": {
+        "enabled": false
+      },
+      "apple-notes": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "bear-notes": {
+        "enabled": false
+      },
+      "diagram-maker": {
+        "enabled": true
+      },
+      "obsidian-vault-maintainer": {
+        "enabled": false
+      },
+      "canvas": {
+        "enabled": true
+      },
+      "video-frames": {
+        "enabled": false
+      },
+      "things-mac": {
+        "enabled": false
+      },
+      "python-debugpy": {
+        "enabled": false
+      },
+      "peekaboo": {
+        "enabled": false
+      },
+      "notion": {
+        "enabled": false
+      },
+      "node-inspect-debugger": {
+        "enabled": false
+      },
+      "node-connect": {
+        "enabled": false
+      },
+      "model-usage": {
+        "enabled": false
+      },
+      "meme-maker": {
+        "enabled": false
+      }
+    },
+    "workshop": {
+      "autonomous": {
+        "enabled": true
+      }
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-08-02T22:54:44.881Z",
+    "lastRunVersion": "2026.7.1-2",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "tools": {
+    "alsoAllow": [
+      "browser"
+    ],
+    "subagents": {
+      "tools": {
+        "deny": [
+          "gateway",
+          "cron"
+        ]
+      }
+    },
+    "web": {
+      "search": {
+        "provider": "gemini",
+        "enabled": true,
+        "openaiCodex": {}
+      },
+      "fetch": {
+        "enabled": true
+      }
+    },
+    "media": {
+      "audio": {
+        "echoTranscript": true
+      },
+      "models": [
+        {
+          "provider": "lmstudio",
+          "model": "qwen/qwen3.5-0.8b-mtp",
+          "capabilities": [
+            "image",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/qwen3.5-2b-mtp",
+          "capabilities": [
+            "image",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/qwen3.5-4b-mtp",
+          "capabilities": [
+            "image",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/qwen3.5-9b-mtp",
+          "capabilities": [
+            "image",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/gemma-4-e2b-it-qat",
+          "capabilities": [
+            "image",
+            "audio",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/gemma-4-e4b-it-qat",
+          "capabilities": [
+            "image",
+            "audio",
+            "video"
+          ]
+        },
+        {
+          "provider": "lmstudio",
+          "model": "qwen/gemma-4-12b-it-qat",
+          "capabilities": [
+            "image",
+            "audio",
+            "video"
+          ]
+        },
+        {
+          "provider": "openai",
+          "model": "parakeet",
+          "capabilities": [
+            "audio"
+          ]
+        }
+      ]
+    },
+    "codeMode": {
+      "enabled": true
+    },
+    "experimental": {
+      "planTool": true
+    }
+  },
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "token": {
+        "source": "env",
+        "provider": "default",
+        "id": "DISCORD_BOT_TOKEN"
+      },
+      "voice": {
+        "enabled": true,
+        "model": "lmstudio/gemma-4-e4b-it-qat",
+        "autoJoin": [
+          {
+            "guildId": "1403055309597052949",
+            "channelId": "1501741347013660885"
+          }
+        ],
+        "allowedChannels": [
+          {
+            "guildId": "1403055309597052949",
+            "channelId": "1501741347013660885"
+          }
+        ],
+        "realtime": {
+          "provider": "openai",
+          "model": "lmstudio/qwen3-tts",
+          "providers": {
+            "openai": {
+              "apiKey": "SET_ME",
+              "model": "lmstudio/qwen3-tts",
+              "baseUrl": "http://127.0.0.1:8000/v1"
+            }
+          }
+        },
+        "mode": "stt-tts",
+        "tts": {
+          "enabled": true,
+          "auto": "always",
+          "mode": "final",
+          "provider": "openai",
+          "providers": {
+            "openai": {
+              "apiKey": "SET_ME",
+              "baseUrl": "http://127.0.0.1:8000/v1",
+              "model": "lmstudio/qwen3-tts",
+              "responseFormat": "wav"
+            }
+          }
+        }
+      },
+      "groupPolicy": "open",
+      "allowFrom": [
+        "140186601912270849"
+      ]
+    }
+  },
+  "messages": {
+    "tts": {
+      "auto": "always",
+      "provider": "openai",
+      "providers": {
+        "openai": {
+          "apiKey": "SET_ME",
+          "model": "lmstudio/qwen3-tts",
+          "baseUrl": "http://127.0.0.1:8000/v1",
+          "responseFormat": "wav"
+        }
+      },
+      "timeoutMs": 120000
+    }
+  },
+  "$schema": "openclaw_schema.json",
+  "talk": {
+    "provider": "openai",
+    "realtime": {
+      "provider": "openai",
+      "providers": {
+        "openai": {
+          "apiKey": "SET_ME",
+          "baseUrl": "http://127.0.0.1:8000/v1",
+          "model": "lmstudio/qwen3-tts",
+          "responseFormat": "wav"
+        }
+      }
+    }
+  }
+}
