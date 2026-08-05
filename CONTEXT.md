@@ -24,7 +24,7 @@ Standard tags for Daily Log line items and commit message types:
 - A **Project** is mounted under `src/<repo-name>` and has its own git history and branch strategy
 - A **Sub-submodule** lives inside a Project and has its own remote, branch rules, and PR workflow (see ADR 0005)
 - A **Work Item** appears in the **Daily Log** when work is in-progress or complete
-- A **Work Item** appears in the **Backlog** when planned but not yet started
+- A **Work Item** appears in the **Backlog** (the external issue tracker — no local file mirrors it, see ADR 0008) when planned but not yet started
 - Each line item in a **Daily Log** carries a **Tag** that becomes the commit type
 - An **ADR** covers orchestrator-level decisions only; project-level decisions live in `src/<repo-name>/docs/adr/`
 - **ARCHITECTURE.md** is the living structural map; ADRs are the immutable log of why it got there
