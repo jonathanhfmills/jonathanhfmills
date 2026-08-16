@@ -34,17 +34,7 @@ orchestrator (main)
 
 | Path | Remote | Branch |
 |------|--------|--------|
-| `src/git-orchestrator/` | github.com/jonathanhfmills/git-orchestrator | `main` |
-| `src/skills/` | github.com/jonathanhfmills/skills | `main` |
-| `src/bicameral-mind-agents/` | github.com/jonathanhfmills/bicameral-mind-agents | `master` |
-| `src/fahrenheit-non-zero-floating-point-scale/` | github.com/jonathanhfmills/fahrenheit-non-zero-floating-point-scale | `main` |
-| `src/website-wp-bedrock-template/` | github.com/jonathanhfmills/website-wp-bedrock-template | `main` |
-| `src/website-wp-theme-template/` | github.com/jonathanhfmills/website-wp-theme-template | `main` |
-| `src/aw-watcher-window-wayland/` | github.com/jonathanhfmills/aw-watcher-window-wayland | `master` |
-| `src/jonathanhfmills/` | github.com/jonathanhfmills/jonathanhfmills | `main` |
-
-| `src/royalclaw/` | github.com/jonathanhfmills/royalclaw | `master` |
-| `src/aw-android-adb/` | github.com/jonathanhfmills/aw-android-adb | `main` |
+| `src/workspace/` | github.com:HellFireAE/HellFireAE.git | `retire-tasks-md` |
 
 ## Commit flow
 

@@ -8,16 +8,7 @@ Container for all project submodules. Each subdirectory is a separate git reposi
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `git-orchestrator/` | Personal orchestrator template — the upstream of this repo |
-| `skills/` | Reusable OMC skills |
-| `bicameral-mind-agents/` | Debate engine agents (LogicAgent, nullclaw) |
-| `fahrenheit-non-zero-floating-point-scale/` | Fahrenheit non-zero floating point scale project |
-| `website-wp-bedrock-template/` | WordPress Bedrock project template |
-| `website-wp-theme-template/` | WordPress theme template |
-| `aw-watcher-window-wayland/` | ActivityWatch window watcher for Wayland |
-| `jonathanhfmills/` | GitHub profile README repo |
-| `royalclaw/` | royalclaw project |
-| `aw-android-adb/` | ActivityWatch Android ADB watcher |
+| `workspace/` | Hermes Operator — hermes' agent workspace (see root `CONTEXT.md` for the userspace/workspace machine split) |
 
 ## For AI Agents
 
