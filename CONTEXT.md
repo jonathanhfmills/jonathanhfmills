@@ -33,7 +33,8 @@ Standard tags for Daily Log line items and commit message types:
 - **wanda** is the dedicated no-sudo service account hosting the openclaw-scoped Gateway, workspace-rooted at the orchestrator (`/home/jon/userspace`); it can read but not write into the Hermes Operator's workspace (see ADR 0007)
 - **cosmo** is the dedicated no-sudo service account hosting the hermes-scoped Gateway, workspace-rooted at `src/workspace` only, with no access outside it (see ADR 0007)
 - **lms** is the dedicated no-sudo service account on wanda-box running the shared LM Studio (ROCm) chat/vision inference server; it has no ACL access into `userspace` at all, and **wanda**/**cosmo** call it only as an HTTP client over loopback (see ADR 0007)
-- **desktop** is a separate physical machine (RTX 3080, native CUDA), not part of the wanda/cosmo/lms boundary, hosting TTS (faster-qwen3-tts) and STT (faster-whisper) reachable by wanda-box over the tailnet (see ADR 0007)
+- **desktop** is a physical machine (RTX 3080, native CUDA) hosting TTS (faster-qwen3-tts) and STT (faster-whisper) reachable by wanda-box over the tailnet (see ADR 0007); it is where `userspace` (openclaw's workspace) is checked out today, while `src/workspace` (hermes' workspace) currently runs on a separate machine (9070 XT) — the goal is to consolidate both onto one machine, so this split is transitional, not a settled architecture (topology reconciliation with ADR 0007 deferred)
+- `userspace`'s root-level `config/` (planned) is the git-based backup/seed source for **desktop**: both openclaw's own config and Jon's personal Ubuntu dotfiles (shell, git, ssh), plus the openclaw service account's `/home/openclaw/.openclaw` (Tailscale serve config) — kept separate from `src/workspace`'s own `config/` Stow packages, which back up hermes' machine
 
 ## Example
 
