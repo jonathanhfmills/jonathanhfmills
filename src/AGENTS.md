@@ -8,7 +8,6 @@ Container for all project submodules. Each subdirectory is a separate git reposi
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `dotfiles-wsl/` | WSL2 dev environment dotfiles; Universal Observer seed; contains `bicameral-mind` sub-submodule |
 | `git-orchestrator/` | Personal orchestrator template — the upstream of this repo |
 | `skills/` | Reusable OMC skills |
 | `bicameral-mind-agents/` | Debate engine agents (LogicAgent, nullclaw) |
@@ -18,7 +17,6 @@ Container for all project submodules. Each subdirectory is a separate git reposi
 | `aw-watcher-window-wayland/` | ActivityWatch window watcher for Wayland |
 | `jonathanhfmills/` | GitHub profile README repo |
 | `royalclaw/` | royalclaw project |
-| `dotfiles-jon/` | Personal dotfiles (non-WSL variant) |
 | `aw-android-adb/` | ActivityWatch Android ADB watcher |
 
 ## For AI Agents
