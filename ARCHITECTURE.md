@@ -34,7 +34,6 @@ orchestrator (main)
 
 | Path | Remote | Branch |
 |------|--------|--------|
-| `src/dotfiles-wsl/` | github.com/jonathanhfmills/dotfiles-wsl | `master` |
 | `src/git-orchestrator/` | github.com/jonathanhfmills/git-orchestrator | `main` |
 | `src/skills/` | github.com/jonathanhfmills/skills | `main` |
 | `src/bicameral-mind-agents/` | github.com/jonathanhfmills/bicameral-mind-agents | `master` |
@@ -45,10 +44,7 @@ orchestrator (main)
 | `src/jonathanhfmills/` | github.com/jonathanhfmills/jonathanhfmills | `main` |
 
 | `src/royalclaw/` | github.com/jonathanhfmills/royalclaw | `master` |
-| `src/dotfiles-jon/` | github.com/jonathanhfmills/dotfiles-jon | `master` |
 | `src/aw-android-adb/` | github.com/jonathanhfmills/aw-android-adb | `main` |
-
-Note: `dotfiles-wsl` contains `bicameral-mind` as a sub-submodule (see ADR 0005). `dotfiles-template` not yet registered — empty repo, pending seed from `dotfiles-wsl`.
 
 ## Commit flow
 
